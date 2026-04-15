@@ -1,0 +1,1 @@
+export { criarTarefa, listarTarefas, buscarTarefa, atualizarTarefa, deletarTarefa } from "./tarefaService.js";

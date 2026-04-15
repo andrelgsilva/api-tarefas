@@ -9,7 +9,7 @@ export const criarTarefa = async (data) => {
   const tarefa = new Tarefa({
     objectId: uuidv4(),
     descricao: data.descricao,
-    concluida: data.concluida ?? false
+    concluida: data.concluida ?? false,
   });
 
   await sql`
@@ -32,9 +32,7 @@ export const buscarTarefa = async (id) => {
     SELECT * FROM tarefas WHERE objectId = ${id}
   `;
 
-  if (result.length === 0) {
-    throw new Error("Tarefa não encontrada");
-  }
+  if (result.length === 0) throw new Error("Tarefa não encontrada");
 
   return result[0];
 };
@@ -45,12 +43,9 @@ export const atualizarTarefa = async (id, data) => {
     SELECT * FROM tarefas WHERE objectId = ${id}
   `;
 
-  if (result.length === 0) {
-    throw new Error("Tarefa não encontrada");
-  }
+  if (result.length === 0) throw new Error("Tarefa não encontrada");
 
   const tarefa = result[0];
-
   const novaDescricao = data.descricao ?? tarefa.descricao;
   const novaConclusao = data.concluida ?? tarefa.concluida;
 
@@ -69,13 +64,7 @@ export const deletarTarefa = async (id) => {
     SELECT * FROM tarefas WHERE objectId = ${id}
   `;
 
-  if (result.length === 0) {
-    throw new Error("Tarefa não encontrada");
-  }
+  if (result.length === 0) throw new Error("Tarefa não encontrada");
 
-  await sql`
-    DELETE FROM tarefas WHERE objectId = ${id}
-  `;
+  await sql`DELETE FROM tarefas WHERE objectId = ${id}`;
 };
-
-console.log(process.env.DATABASE_URL);

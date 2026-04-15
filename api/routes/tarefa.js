@@ -3,10 +3,10 @@ import * as controller from "../controllers/tarefaController.js";
 
 const router = express.Router();
 
-router.post("/", controller.criarTarefa);
-router.get("/", controller.listarTarefas);
-router.get("/:objectId", controller.buscarTarefa);
-router.put("/:objectId", controller.atualizarTarefa);
-router.delete("/:objectId", controller.deletarTarefa);
+router.post("/", controller.criarTarefaController);
+router.get("/", controller.listarTarefasController);
+router.get("/:objectId", controller.buscarTarefaController);
+router.put("/:objectId", controller.atualizarTarefaController);
+router.delete("/:objectId", controller.deletarTarefaController);
 
 export default router;
