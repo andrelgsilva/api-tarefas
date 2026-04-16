@@ -1,23 +1,19 @@
 import { neon } from "@neondatabase/serverless";
-import { v4 as uuidv4 } from "uuid";
 import { Tarefa } from "../models/tarefa.js";
 
 const sql = neon(process.env.DATABASE_URL);
 
 // CREATE
 export const criarTarefa = async (data) => {
-  const tarefa = new Tarefa({
-    objectId: uuidv4(),
-    descricao: data.descricao,
-    concluida: data.concluida ?? false,
-  });
+  console.log("DADOS RECEBIDOS:", data);
 
-  await sql`
-    INSERT INTO tarefas (objectId, descricao, concluida)
-    VALUES (${tarefa.objectId}, ${tarefa.descricao}, ${tarefa.concluida})
+  const result = await sql`
+    INSERT INTO tarefas (titulo, descricao, concluida)
+    VALUES (${data.titulo}, ${data.descricao}, ${data.concluida ?? false})
+    RETURNING *
   `;
 
-  return tarefa;
+  return result[0];
 };
 
 // READ ALL
@@ -29,7 +25,7 @@ export const listarTarefas = async () => {
 // READ ONE
 export const buscarTarefa = async (id) => {
   const result = await sql`
-    SELECT * FROM tarefas WHERE objectId = ${id}
+    SELECT * FROM tarefas WHERE id = ${id}
   `;
 
   if (result.length === 0) throw new Error("Tarefa não encontrada");
@@ -40,31 +36,37 @@ export const buscarTarefa = async (id) => {
 // UPDATE
 export const atualizarTarefa = async (id, data) => {
   const result = await sql`
-    SELECT * FROM tarefas WHERE objectId = ${id}
+    SELECT * FROM tarefas WHERE id = ${id}
   `;
 
   if (result.length === 0) throw new Error("Tarefa não encontrada");
 
   const tarefa = result[0];
+
+  const novoTitulo = data.titulo ?? tarefa.titulo;
   const novaDescricao = data.descricao ?? tarefa.descricao;
   const novaConclusao = data.concluida ?? tarefa.concluida;
 
-  await sql`
+  const updated = await sql`
     UPDATE tarefas
-    SET descricao = ${novaDescricao}, concluida = ${novaConclusao}
-    WHERE objectId = ${id}
+    SET 
+      titulo = ${novoTitulo},
+      descricao = ${novaDescricao}, 
+      concluida = ${novaConclusao}
+    WHERE id = ${id}
+    RETURNING *
   `;
 
-  return { ...tarefa, descricao: novaDescricao, concluida: novaConclusao };
+  return updated[0];
 };
 
 // DELETE
 export const deletarTarefa = async (id) => {
   const result = await sql`
-    SELECT * FROM tarefas WHERE objectId = ${id}
+    SELECT * FROM tarefas WHERE id = ${id}
   `;
 
   if (result.length === 0) throw new Error("Tarefa não encontrada");
 
-  await sql`DELETE FROM tarefas WHERE objectId = ${id}`;
+  await sql`DELETE FROM tarefas WHERE id = ${id}`;
 };
