@@ -1,18 +1,22 @@
 import { neon } from "@neondatabase/serverless";
 import { Tarefa } from "../models/tarefa.js";
+import { v4 as uuidv4 } from "uuid";
 
 const sql = neon(process.env.DATABASE_URL);
 
 // CREATE
+import { v4 as uuidv4 } from "uuid";
+
 export const criarTarefa = async (data) => {
-  console.log("DADOS RECEBIDOS:", data);
+  if (!data.descricao) throw new Error("O campo descricao é obrigatório");
+  
+  const objectId = uuidv4();
 
   const result = await sql`
-    INSERT INTO tarefas (titulo, descricao, concluida)
-    VALUES (${data.titulo}, ${data.descricao}, ${data.concluida ?? false})
+    INSERT INTO tarefas (id, descricao, concluida)
+    VALUES (${objectId}, ${data.descricao}, ${data.concluida ?? false})
     RETURNING *
   `;
-
   return result[0];
 };
 
@@ -44,7 +48,7 @@ export const atualizarTarefa = async (id, data) => {
   const tarefa = result[0];
 
   const novoTitulo = data.titulo ?? tarefa.titulo;
-  const novaDescricao = data.descricao ?? tarefa.descricao;
+  const novaDescricao = data.descricao || tarefa.descricao;
   const novaConclusao = data.concluida ?? tarefa.concluida;
 
   const updated = await sql`
