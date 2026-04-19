@@ -12,8 +12,8 @@ export const criarTarefa = async (data) => {
   const objectId = uuidv4();
 
   const result = await sql`
-    INSERT INTO tarefas (id, descricao, concluida)
-    VALUES (${objectId}, ${data.descricao}, ${data.concluida ?? false})
+    INSERT INTO tarefas (id, titulo, descricao, concluida)
+    VALUES (${objectId},${data.titulo} ${data.descricao}, ${data.concluida ?? false})
     RETURNING *
   `;
   return result[0];
