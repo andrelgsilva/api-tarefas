@@ -13,7 +13,7 @@ export const criarTarefa = async (data) => {
 
   const result = await sql`
     INSERT INTO tarefas (id, titulo, descricao, concluida)
-    VALUES (${objectId},${data.titulo} ${data.descricao}, ${data.concluida ?? false})
+    VALUES (${objectId}, ${data.titulo}, ${data.descricao}, ${data.concluida ?? false})
     RETURNING *
   `;
   return result[0];
