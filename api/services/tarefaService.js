@@ -1,6 +1,5 @@
 import { neon } from "@neondatabase/serverless";
 import { Tarefa } from "../models/tarefa.js";
-import { v4 as uuidv4 } from "uuid";
 
 const sql = neon(process.env.DATABASE_URL);
 
