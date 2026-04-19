@@ -28,7 +28,7 @@ export const listarTarefas = async () => {
 // READ ONE
 export const buscarTarefa = async (id) => {
   const result = await sql`
-    SELECT * FROM tarefas WHERE id = ${id}
+    SELECT * FROM tarefas WHERE id = ${id}::uuid
   `;
 
   if (result.length === 0) throw new Error("Tarefa não encontrada");
@@ -39,7 +39,7 @@ export const buscarTarefa = async (id) => {
 // UPDATE
 export const atualizarTarefa = async (id, data) => {
   const result = await sql`
-    SELECT * FROM tarefas WHERE id = ${id}
+    SELECT * FROM tarefas WHERE id = ${id}::uuid
   `;
 
   if (result.length === 0) throw new Error("Tarefa não encontrada");
@@ -56,7 +56,7 @@ export const atualizarTarefa = async (id, data) => {
       titulo = ${novoTitulo},
       descricao = ${novaDescricao}, 
       concluida = ${novaConclusao}
-    WHERE id = ${id}
+    WHERE id = ${id}::uuid
     RETURNING *
   `;
 
@@ -66,10 +66,10 @@ export const atualizarTarefa = async (id, data) => {
 // DELETE
 export const deletarTarefa = async (id) => {
   const result = await sql`
-    SELECT * FROM tarefas WHERE id = ${id}
+    SELECT * FROM tarefas WHERE id = ${id}::uuid
   `;
 
   if (result.length === 0) throw new Error("Tarefa não encontrada");
 
-  await sql`DELETE FROM tarefas WHERE id = ${id}`;
+  await sql`DELETE FROM tarefas WHERE id = ${id}::uuid`;
 };
