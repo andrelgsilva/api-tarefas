@@ -4,17 +4,26 @@ const getUserModel = (sequelize, { DataTypes }) => {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
+      validate: { notEmpty: true },
     },
     email: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
+      validate: { notEmpty: true },
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: { notEmpty: true },
+    },
+    refreshToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    refreshTokenExpiresAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   });
 
@@ -25,14 +34,14 @@ const getUserModel = (sequelize, { DataTypes }) => {
   User.findByLogin = async (login) => {
     let user = await User.findOne({
       where: { username: login },
+      attributes: ["id", "username", "email", "password", "refreshToken", "refreshTokenExpiresAt"],
     });
-
     if (!user) {
       user = await User.findOne({
         where: { email: login },
+        attributes: ["id", "username", "email", "password", "refreshToken", "refreshTokenExpiresAt"],
       });
     }
-
     return user;
   };
 

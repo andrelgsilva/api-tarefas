@@ -1,4 +1,6 @@
 import { Router } from "express";
+import  bcrypt from "bcrypt";
+
 
 const router = Router();
 
@@ -18,13 +20,17 @@ router.get("/:userId", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  
   const user = await req.context.models.User.create({
     username: req.body.username,
     email: req.body.email,
+    password: hashedPassword,
   });
 
   return res.status(201).send(user);
 });
+
 
 router.put("/:userId", async (req, res) => {
   const response = await req.context.models.User.update(
