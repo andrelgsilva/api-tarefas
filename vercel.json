@@ -14,6 +14,30 @@
     {
       "src": "/tarefas",
       "dest": "api/index.js"
+    },
+    {
+      "src": "/session/(.*)",
+      "dest": "api/index.js"
+    },
+    {
+      "src": "/session",
+      "dest": "api/index.js"
+    },
+    {
+      "src": "/user/(.*)",
+      "dest": "api/index.js"
+    },
+    {
+      "src": "/user",
+      "dest": "api/index.js"
+    },
+    {
+      "src": "/message/(.*)",
+      "dest": "api/index.js"
+    },
+    {
+      "src": "/message",
+      "dest": "api/index.js"
     }
   ]
 }
