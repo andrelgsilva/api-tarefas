@@ -1,4 +1,4 @@
-import "./env.js";
+import "dotenv/config";
 import cors from "cors";
 import express from "express";
 import models, { sequelize } from "./models/index.js";
@@ -62,15 +62,18 @@ const createUsersWithMessages = async () => {
   await models.Message.create({ text: "Hi again", userId: user2.id });
 };
 
-sequelize.sync({ force: true }).then(async () => {
-  await createUsersWithMessages();
-
-  if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== "production") {
+  sequelize.sync({ force: true }).then(async () => {
+    await createUsersWithMessages();
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
       console.log(`Servidor rodando em http://localhost:${port}`);
     });
-  }
-});
+  });
+} else {
+  sequelize.sync({ alter: true }).catch((err) => {
+    console.error("Erro ao sincronizar banco:", err);
+  });
+}
 
 export default app;
