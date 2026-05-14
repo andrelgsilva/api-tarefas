@@ -10,7 +10,7 @@
     {
       "src": "/",
       "dest": "api/index.js"
-    }
+    },
     {
       "src": "/tarefas/(.*)",
       "dest": "api/index.js"
